@@ -15,6 +15,39 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: FRONTEND_HOST
+        value: agrivision-web.onrender.com
+      - key: DATABASE_URL
+        value: sqlite:///./agrivision.db
+
+  - type: web
+    name: agrivision-web
+    runtime: static
+    rootDir: AgriVisionAI/frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_HOST
+        fromService:
+          type: web
+          name: agrivision-api
+          property: host
+services:
+  - type: web
+    name: agrivision-api
+    runtime: python
+    plan: free
+    rootDir: AgriVisionAI
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DATA_MODE
+        value: demo
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FRONTEND_HOST
         fromService:
           type: web
           name: agrivision-web
