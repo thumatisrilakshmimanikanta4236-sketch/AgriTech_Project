@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+sqlalchemy>=2
+pydantic[email]>=2
+pyjwt
+python-multipart
+pandas
+numpy
+scikit-learn
+joblib
+xgboost
+lightgbm
+pytest
+httpx
+python-dotenv
